@@ -88,7 +88,7 @@ runs:
     - name: Do git diff to limit SFDX Analyzer
       shell: bash
       id: getdiff
-      run: echo "::set-output name=difflist::$(git diff --name-only --diff-filter=MCRA $(git merge-base --fork-point origin/${{ github.base_ref }} ${{ github.sha }})..${{ github.sha }} ${{ inputs.source_path }} | paste -sd "," -)"
+      run: echo "difflist=$(git diff --name-only --diff-filter=MCRA $(git merge-base --fork-point origin/${{ github.base_ref }} ${{ github.sha }})..${{ github.sha }} ${{ inputs.source_path }} | paste -sd "," -)" >> $GITHUB_OUTPUT
     
     - name: Setup Node
       uses: actions/setup-node@v3
