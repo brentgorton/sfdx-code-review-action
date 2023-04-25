@@ -130,7 +130,7 @@ runs:
     
     - name: DEBUG
       shell: bash
-      run: ls -la && cat *.csv
+      run: cat report.json
       
     - name: 'Convert Grapgh Engine report to json'
       if: ${{ inputs.dfa_setting != '' }}
