@@ -127,10 +127,6 @@ runs:
       if: ${{ inputs.dfa_setting != 'dfa-only' }}
       shell: bash
       run: cat report.csv | python -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))' > report.json
-    
-    - name: DEBUG
-      shell: bash
-      run: cat report.json
       
     - name: 'Convert Grapgh Engine report to json'
       if: ${{ inputs.dfa_setting != '' }}
