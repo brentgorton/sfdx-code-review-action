@@ -124,6 +124,10 @@ runs:
       shell: bash
       run: cat report.csv | python -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))' > report.json
     
+    - name: DEBUG
+      shell: bash
+      run: ls -la && cat *.csv
+      
     - name: 'Convert Grapgh Engine report to json'
       if: ${{ inputs.dfa_setting != '' }}
       shell: bash
