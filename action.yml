@@ -72,7 +72,7 @@ runs:
       shell: bash
       run: |
           git fetch origin ${{ github.base_ref }}
-          git fetch origin ${{ github.head_ref }}
+          git fetch origin ${{ github.ref }}
 
     - name: Get GitDiff from GitHub PR API
       id: fetch_diff
@@ -88,7 +88,7 @@ runs:
     - name: Do git diff to limit SFDX Analyzer
       shell: bash
       id: getdiff
-      run: echo "::set-output name=difflist::$(git diff --name-only --diff-filter=MCRA $(git merge-base --fork-point origin/${{ github.base_ref }} origin/${{ github.head_ref }})..origin/${{ github.head_ref }} ${{ inputs.source_path }} | paste -sd "," -)"
+      run: echo "::set-output name=difflist::$(git diff --name-only --diff-filter=MCRA $(git merge-base --fork-point origin/${{ github.base_ref }} origin/${{ github.ref }})..origin/${{ github.ref }} ${{ inputs.source_path }} | paste -sd "," -)"
     
     - name: Setup Node
       uses: actions/setup-node@v3
