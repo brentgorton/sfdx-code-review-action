@@ -109,42 +109,30 @@ runs:
       shell: bash
       run: sfdx plugins:install @salesforce/sfdx-scanner
 
-    - name: 'Run Code Scanner'
+    - name: 'Run Code Scanner Report'
       if: ${{ inputs.dfa_setting != 'dfa-only' }}
       shell: bash
-      env:
-        NODE_OPTIONS: "--max-old-space-size=4096" 
-      run: sfdx scanner:run --target "${{ steps.getdiff.outputs.difflist }}" --category "${{ inputs.category }}" --engine "${{ inputs.engine }}" --eslintconfig "${{ inputs.eslintconfig }}" --pmdconfig "${{ inputs.pmdconfig }}" --tsconfig "${{ inputs.tsconfig }}" --format csv --normalize-severity  -o report.csv
-    
+      run: |
+        sfdx scanner:run --target "${{ steps.getdiff.outputs.difflist }}" --category "${{ inputs.category }}" --engine "${{ inputs.engine }}" --eslintconfig "${{ inputs.eslintconfig }}" --pmdconfig "${{ inputs.pmdconfig }}" --tsconfig "${{ inputs.tsconfig }}" --format csv --normalize-severity  -o report.csv
+        if test -f "report.csv"; then
+          cat report.csv | python -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))' > report.json
+          echo "`jq -c 'map({path: (.File | split("${{ github.event.repository.name }}/")[2]), position: .Line, severity: .["Normalized Severity"], body: (.Description + " (" + .Engine + " - " + .Rule + " - " + "Severity: " + .["Normalized Severity"] + ")")})' report.json`" > comments.json
+        else
+          echo "[]" > comments.json
+        fi
     - name: 'Run Graph Engine'
       if: ${{ inputs.dfa_setting != '' }}
       shell: bash
       env:
         NODE_OPTIONS: "--max-old-space-size=4096" 
-      run: sfdx scanner:run:dfa --sfgejvmargs "-Xmx4g" --target "${{ steps.getdiff.outputs.difflist }}" --projectdir "${{ inputs.projectdir }}" --rule-thread-count "${{ inputs.rule_thread_count }}" --rule-thread-timeout "${{ inputs.rule_thread_timeout }}" --format csv --normalize-severity  -o dfa-report.csv
-
-    - name: 'Convert report to json'
-      if: ${{ inputs.dfa_setting != 'dfa-only' }}
-      shell: bash
-      run: cat report.csv | python -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))' > report.json
-      
-    - name: 'Convert Grapgh Engine report to json'
-      if: ${{ inputs.dfa_setting != '' }}
-      shell: bash
-      run: cat dfa-report.csv | python -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))' > dfa-report.json
-
-    - name: 'Transform report to review comments'
-      if: ${{ inputs.dfa_setting != 'dfa-only' }}
-      shell: bash
       run: |
-          echo "`jq -c 'map({path: (.File | split("${{ github.event.repository.name }}/")[2]), position: .Line, severity: .["Normalized Severity"], body: (.Description + " (" + .Engine + " - " + .Rule + " - " + "Severity: " + .["Normalized Severity"] + ")")})' report.json`" > comments.json
-    
-    - name: 'Transform Graph Engine report to review comments'
-      if: ${{ inputs.dfa_setting != '' }}
-      shell: bash
-      run: |
+        sfdx scanner:run:dfa --sfgejvmargs "-Xmx4g" --target "${{ steps.getdiff.outputs.difflist }}" --projectdir "${{ inputs.projectdir }}" --rule-thread-count "${{ inputs.rule_thread_count }}" --rule-thread-timeout "${{ inputs.rule_thread_timeout }}" --format csv --normalize-severity  -o dfa-report.csv
+        if test -f "dfa-report.csv"; then
+          cat dfa-report.csv | python -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))' > dfa-report.json
           echo "`jq -c 'map({path: (."Source File" | split("${{ github.event.repository.name }}/")[2]), position: ."Source Line", severity: .["Normalized Severity"], body: ("Source Type: " + ."Source Type" + ", Source Method: " + ."Source Method" + ", Sink File: " + (."Sink File" | split("${{ github.event.repository.name }}/")[2]) + ": " + ."Sink Line" + " ### " + .Description + " (" + .Engine + " - " + .Rule + " - " + "Severity: " + ."Normalized Severity" + ")")})' dfa-report.json`" > dfa-comments.json
-
+        else
+          echo "[]" > dfa-comments.json
+        fi
     - name: 'Empty Comments Array'
       if: ${{ inputs.dfa_setting == 'dfa-only' }}
       shell: bash
