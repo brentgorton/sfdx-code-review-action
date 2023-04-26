@@ -28,7 +28,7 @@ async function main() {
 
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
-				annotation_level: (violation.severity <= 2 ? 'failure' : (violation.severity > 3 ? 'notice' : 'warning')),
+				annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
 				start_line: parseInt(violation.line),
 				end_line: parseInt(violation.endLine),
 				message: `${violation.url}`,
