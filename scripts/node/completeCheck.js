@@ -72,10 +72,10 @@ async function main() {
 		data.conclusion = 'success';
 	}
 
-	const testTable = `<table>
+	const testTable = `<table style="width: 100%;">
 	<tr>
 	  <td>One</td>
-	  <td>Two</td>
+	  <td style="width: 100px;">Two</td>
 	</tr>
 	<tr>
 	  <td colspan="2">Three</td>
