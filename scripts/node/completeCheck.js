@@ -59,7 +59,7 @@ async function main() {
 			for(const ruleName of [...severities[i]].sort()) {
 				summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${summary[ruleName].count}</td></tr>`;
 			}
-			summaryText += '<tr><td><img width="950" height="1" /></td><td><img width="150" height="1" /></td></tr></table>';
+			summaryText += '<tr><td><img width="1000" height="1" /></td><td><img width="150" height="1" /></td></tr></table>';
 		}
 
 	}
