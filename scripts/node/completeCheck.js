@@ -15,6 +15,8 @@ async function main() {
 	const results = JSON.parse(fs.readFileSync(process.argv[2], 'utf-8'));
 	let annotations = [];
 	let actionRequired = false;
+	let summary = {};
+	let severities = [new Set(),new Set(),new Set(),new Set(),new Set()];
 	results.forEach( (file) => {
 		file.violations.forEach( (violation) => {
 			let a = {
@@ -33,14 +35,35 @@ async function main() {
 				actionRequired = true;
 			}
 			annotations.push(a);
+			if(!summary[violation.ruleName]) {
+				summary[violation.ruleName] = {
+					count: 0,
+					severity: violation.severity,
+					ruleName: violation.ruleName
+				};
+			}
+			summary[violation.ruleName].count++;
+			severities[violation.severity - 1].add(violation.ruleName);
 		});
 	});
+	let summaryText = '';
+	const severityHeaders = ['Critical', 'Error', 'Warning', 'Info', 'Hint'];
+	for(let i = 0; i < severities.length; i++) {
+		if(severities[i].size > 0) {
+			summaryText += `### ${severityHeaders[i]}\n`;
+			severities[i].values().forEach( (ruleName) => {
+				summaryText += `* ${ruleName.ruleName}: ${ruleName.count}\n`;
+			});
+		}
+
+	}
+
 	if(actionRequired) {
 		data.conclusion = 'action_required';
 	}
 	data.output = {
 		title: 'Salesforce Code Quality',
-		summary: 'Complete',
+		summary: summaryText,
 		annotations: annotations
 	}
 	console.log(annotations);
