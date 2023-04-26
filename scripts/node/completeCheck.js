@@ -18,7 +18,7 @@ async function main() {
 	results.forEach( (file) => {
 		file.violations.forEach( (violation) => {
 			let a = {
-				path: file.fileName.replace(process.env.GITHUB_WORKSPACE, ''),
+				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
 				annotation_level: (violation.severity <= 2 ? 'failure' : (violation.severity > 3 ? 'notice' : 'warning')),
 				start_line: parseInt(violation.line),
 				end_line: parseInt(violation.endLine),
