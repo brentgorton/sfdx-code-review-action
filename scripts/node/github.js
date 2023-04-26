@@ -96,6 +96,7 @@ module.exports = {
 
 	annotate: async function (check) {
 		const octokit = new Octokit();
+		console.log(check);
 		await octokit.request('PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}', check);
 	}
 };

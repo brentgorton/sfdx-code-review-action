@@ -1,7 +1,5 @@
 module.exports = {
     generate(pullRequest, output = { title: 'Salesforce Code Quality', summary: '', text: '' }) {
-        console.log('======= Pull Request =======');
-        console.log(pullRequest);
         return {
             owner: pullRequest.base.repo.owner.login,
             repo: pullRequest.base.repo.name,
