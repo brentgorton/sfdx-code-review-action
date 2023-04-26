@@ -17,8 +17,16 @@ async function main() {
 	let actionRequired = false;
 	let summary = {};
 	let severities = [new Set(),new Set(),new Set(),new Set(),new Set()];
+	const severityHeaders = ['Critical', 'Error', 'Warning', 'Info', 'Hint'];
+	let summaryContent = '## Files\n';
 	results.forEach( (file) => {
+		summaryContent += `### ${file.fileName}\n`;
 		file.violations.forEach( (violation) => {
+			summaryContent += 'Violation | Rule | Severity | Line\n';
+			summaryContent += '--- | --- | --- | ---\n';
+			summaryContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity - 1} | ${violation.line}\n`;
+			summaryContent += `* ${violation.ruleName}: ${violation.message.trim()}\n`;
+
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
 				annotation_level: (violation.severity <= 2 ? 'failure' : (violation.severity > 3 ? 'notice' : 'warning')),
@@ -47,12 +55,13 @@ async function main() {
 		});
 	});
 	let summaryText = '';
-	const severityHeaders = ['Critical', 'Error', 'Warning', 'Info', 'Hint'];
 	for(let i = 0; i < severities.length; i++) {
 		if(severities[i].size > 0) {
 			summaryText += `### ${severityHeaders[i]}\n`;
+			summaryText += 'Rule Name | Count\n';
+			summaryText += '--- | ---\n';
 			for(const ruleName of [...severities[i]].sort()) {
-				summaryText += `* ${summary[ruleName].ruleName}: ${summary[ruleName].count}\n`;
+				summaryText += `${summary[ruleName].ruleName} | ${summary[ruleName].count}\n`;
 			}
 		}
 
