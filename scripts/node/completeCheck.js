@@ -14,18 +14,16 @@ async function main() {
 	const fs = require('fs');
 	const results = JSON.parse(fs.readFileSync(process.argv[2], 'utf-8'));
 	let annotations = [];
-	let actionRequired = false;
 	let summary = {};
 	let severities = [new Set(),new Set(),new Set(),new Set(),new Set()];
 	const severityHeaders = ['Critical', 'Error', 'Warning', 'Info', 'Hint'];
-	let summaryContent = '## Files\n';
+	let reportContent = '## Files\n';
 	results.forEach( (file) => {
-		summaryContent += `### ${file.fileName}\n`;
-		summaryContent += 'Violation | Rule | Severity | Line\n';
-		summaryContent += '--- | --- | --- | ---\n';
+		reportContent += `### ${file.fileName}\n`;
+		reportContent += 'Violation | Rule | Severity | Line\n';
+		reportContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
-			summaryContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity} | ${violation.line}\n`;
-			violation.severity = (violation.ruleName === 'ApexCRUDViolation' || violation.ruleName ===  'ApexSharingViolations') ? 1 : violation.severity;
+			reportContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity} | ${violation.line}\n`;
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
 				annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
@@ -64,8 +62,6 @@ async function main() {
 
 	}
 
-	console.log(severities);
-
 	if(severities[0].size > 0){
 		data.conclusion = 'failure';
 	} else if (severities[1].size > 0) {
@@ -78,7 +74,7 @@ async function main() {
 
 	data.output = {
 		title: 'Code Quality Report',
-		summary: summaryText + '\n\n' + summaryContent,
+		summary: summaryText + '\n\n' + reportContent,
 		annotations: annotations
 	}
 	return await github.annotate(data);
