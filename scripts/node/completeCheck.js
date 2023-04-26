@@ -32,6 +32,7 @@ async function main() {
 			if (violation.severity <= 4) {
 				actionRequired = true;
 			}
+			annotations.push(a);
 		});
 	});
 	if(actionRequired) {
