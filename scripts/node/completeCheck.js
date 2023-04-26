@@ -24,7 +24,7 @@ async function main() {
 		summaryContent += 'Violation | Rule | Severity | Line\n';
 		summaryContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
-			summaryContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity - 1} | ${violation.line}\n`;
+			summaryContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity} | ${violation.line}\n`;
 
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
