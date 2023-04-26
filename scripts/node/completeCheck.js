@@ -20,7 +20,7 @@ async function main() {
 	let reportContent = '<h2>Files</h2><br />';
 	reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>';
 	results.forEach( (file) => {
-		reportContent += `<tr><td colspan="4"><h4>${file.fileName}</h4></td></tr>`;
+		reportContent += `<tr><th colspan="4">${file.fileName}</th></tr>`;
 		
 		// reportContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
