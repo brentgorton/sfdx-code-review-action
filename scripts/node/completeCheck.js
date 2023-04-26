@@ -74,8 +74,8 @@ async function main() {
 
 	const testTable = `<table style="width: 100%;">
 	<tr>
-	  <td>One</td>
-	  <td style="width: 100px;">Two</td>
+	  <td><img width="500" height="1" /><p>One</p></td>
+	  <td><img width="100" height="1" /><p>Two</p></td>
 	</tr>
 	<tr>
 	  <td colspan="2">Three</td>
