@@ -58,10 +58,9 @@ async function main() {
 			for(const ruleName of [...severities[i]].sort()) {
 				summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${i + 1}</td><td>${summary[ruleName].count}</td></tr>`;
 			}
-			summaryText += '<tr><td><img width="1000" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr>';
 		}
 	}
-	summaryText += '</table>'
+	summaryText += '<tr><td><img width="1000" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>'
 	if(severities[0].size > 0){
 		data.conclusion = 'failure';
 	} else if (severities[1].size > 0) {
