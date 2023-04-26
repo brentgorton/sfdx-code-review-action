@@ -27,7 +27,7 @@ async function main() {
 				message: `${violation.message.trim()}\n${violation.url}`,
 				title: violation.ruleName
 			});
-			if (violation.severity <= 2) {
+			if (violation.severity <= 4) {
 				actionRequired = true;
 			}
 		});
