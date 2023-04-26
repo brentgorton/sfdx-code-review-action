@@ -7,27 +7,34 @@ async function main() {
 	const pullRequest = githubAction.context.payload.pull_request;
 	const check = require('./check.js');
 	let data = check.getExisting(pullRequest, checkId);
-	/*data.status = 'completed';
-	data.conclusion = 'success';*/
+	data.status = 'completed';
+	data.conclusion = 'success';
 	const github = require('./github.js');
 
 	const fs = require('fs');
 	const results = JSON.parse(fs.readFileSync(process.argv[2], 'utf-8'));
 	let annotations = [];
+	let actionRequired = false;
 	results.forEach( (file) => {
 		file.violations.forEach( (violation) => {
 			annotations.push({
 				path: file.fileName,
 				annotation_level: (violation.severity <= 2 ? 'failure' : (violation.severity > 3 ? 'notice' : 'warning')),
 				start_line: parseInt(violation.line),
-				// start_column: parseInt(violation.column),
+				start_column: violation.line !== violation.endLine ? null : parseInt(violation.column),
 				end_line: parseInt(violation.endLine),
-				// end_column: parseInt(violation.endColumn),
-				message: violation.message.trim()//`${violation.message.trim()}\n${violation.url}`,
-				//title: violation.ruleName
+				end_column: violation.line !== violation.endLine ? null : parseInt(violation.endColumn),
+				message: `${violation.message.trim()}\n${violation.url}`,
+				title: violation.ruleName
 			});
+			if (violation.severity <= 2) {
+				actionRequired = true;
+			}
 		});
 	});
+	if(actionRequired) {
+		data.conclusion = 'action_required';
+	}
 	data.output = {
 		title: 'Salesforce Code Quality',
 		summary: 'Complete',
