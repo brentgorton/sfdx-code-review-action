@@ -51,7 +51,7 @@ async function main() {
 		});
 		
 	});
-	reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="350" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>';
+	reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="375" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>';
 	let summaryText = '';
 	summaryText += '<table><tr><th>Rule Name</th><th>Severity</th><th>Count</th></tr>';
 	for(let i = 0; i < severities.length; i++) {
