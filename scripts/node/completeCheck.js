@@ -77,7 +77,7 @@ async function main() {
 	}
 
 	data.output = {
-		title: 'Salesforce Code Quality',
+		title: 'Code Quality Report',
 		summary: summaryText + '\n\n' + summaryContent,
 		annotations: annotations
 	}
