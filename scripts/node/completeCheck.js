@@ -20,18 +20,18 @@ async function main() {
 				path: file.fileName,
 				annotation_level: (violation.severity <= 2 ? 'failure' : (violation.severity > 3 ? 'notice' : 'warning')),
 				start_line: parseInt(violation.line),
-				start_column: parseInt(violation.column),
+				// start_column: parseInt(violation.column),
 				end_line: parseInt(violation.endLine),
-				end_column: parseInt(violation.endColumn),
-				message: `${violation.message.trim()}\n${violation.url}`,
-				title: violation.ruleName
+				// end_column: parseInt(violation.endColumn),
+				message: violation.message.trim()//`${violation.message.trim()}\n${violation.url}`,
+				//title: violation.ruleName
 			});
 		});
 	});
 	data.output = {
 		title: 'Salesforce Code Quality',
 		summary: 'Complete',
-		annotations
+		annotations: annotations
 	}
 	return await github.annotate(data);
 }
