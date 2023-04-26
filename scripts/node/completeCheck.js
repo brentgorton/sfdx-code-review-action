@@ -22,8 +22,8 @@ async function main() {
 				annotation_level: (violation.severity <= 2 ? 'failure' : (violation.severity > 3 ? 'notice' : 'warning')),
 				start_line: parseInt(violation.line),
 				end_line: parseInt(violation.endLine),
-				message: `${violation.message.trim()}\n${violation.url}`,
-				title: violation.ruleName
+				message: `${violation.message.trim()} **[${violation.ruleName}](${violation.url})**`,
+				title: `${violation.ruleName}: ${violation.message.trim()}`
 			};
 			if(violation.line === violation.endLine) {
 				a.start_column = parseInt(violation.column);
