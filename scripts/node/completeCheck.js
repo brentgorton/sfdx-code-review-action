@@ -72,9 +72,8 @@ async function main() {
 	}
 	data.output = {
 		title: 'Salesforce Code Quality',
-		summary: summaryText,
+		summary: summaryText + '\n\n' + summaryContent,
 		annotations: annotations
 	}
-	console.log(annotations);
 	return await github.annotate(data);
 }
