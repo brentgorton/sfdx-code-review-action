@@ -1,9 +1,9 @@
 module.exports = {
-    generate(pullRequest, output = { title: 'Salesforce Code Quality', summary: '', text: '' }) {
+    generate(pullRequest, output = { title: 'Salesforce', summary: '', text: '' }) {
         return {
             owner: pullRequest.base.repo.owner.login,
             repo: pullRequest.base.repo.name,
-            name: 'Salesforce Code Quality',
+            name: 'Salesforce',
             head_sha: pullRequest.head.sha,
             status: 'in_progress',
             output,
