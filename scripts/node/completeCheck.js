@@ -31,6 +31,7 @@ async function main() {
 				annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
 				start_line: parseInt(violation.line),
 				end_line: parseInt(violation.endLine),
+				message : `${violation.severity <= 2 ? violation.url : ''}`,
 				title: `${violation.ruleName}: ${violation.message.trim()}`
 			};
 			if(violation.line === violation.endLine) {
