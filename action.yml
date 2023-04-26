@@ -67,7 +67,12 @@ runs:
       with:
           fetch-depth: 0
           ref: ${{ github.event.inputs.ref }}
-
+    - name: 'Create Check'
+      shell: bash
+      env:
+          GITHUB_TOKEN: ${{ inputs.github_token }}
+      run: node ${{ github.action_path }}/scripts/node/createCheck.js
+      
     - name: Fetch PR head and base
       shell: bash
       run: |
@@ -109,11 +114,6 @@ runs:
     - name: 'Install Code Scanner'
       shell: bash
       run: sfdx plugins:install @salesforce/sfdx-scanner
-    - name: 'Create Check'
-      shell: bash
-      env:
-          GITHUB_TOKEN: ${{ inputs.github_token }}
-      run: node ${{ github.action_path }}/scripts/node/createCheck.js
 
     - name: 'Run Code Scanner Report'
       if: ${{ inputs.dfa_setting != 'dfa-only' }}
