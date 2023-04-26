@@ -21,7 +21,7 @@ async function main() {
 	results.forEach( (file) => {
 		reportContent += `### ${file.fileName}\n`;
 		reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>\n';
-		reportContent += '--- | --- | --- | ---\n';
+		// reportContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
 			reportContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity} | ${violation.line}\n`;
 			let a = {
