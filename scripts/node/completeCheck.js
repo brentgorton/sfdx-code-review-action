@@ -25,7 +25,7 @@ async function main() {
 		summaryContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
 			summaryContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity} | ${violation.line}\n`;
-
+			violation.severity = (violation.ruleName === 'ApexCRUDViolation' || violation.ruleName ===  'ApexSharingViolations') ? 1 : violation.severity;
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
 				annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
