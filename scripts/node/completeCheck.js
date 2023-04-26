@@ -48,7 +48,7 @@ async function main() {
 			summary[violation.ruleName].count++;
 			severities[violation.severity - 1].add(violation.ruleName);
 		});
-		reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="200" height="1" /></td><td><img width="100" height="1" /></td><td><img width="100" height="1" /></td></tr></table>';
+		reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="350" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>';
 	});
 	let summaryText = '';
 	for(let i = 0; i < severities.length; i++) {
@@ -59,7 +59,7 @@ async function main() {
 			for(const ruleName of [...severities[i]].sort()) {
 				summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${summary[ruleName].count}</td></tr>`;
 			}
-			summaryText += '<tr><td><img width="900" height="1" /></td><td><img width="100" height="1" /></td></tr></table>';
+			summaryText += '<tr><td><img width="950" height="1" /></td><td><img width="150" height="1" /></td></tr></table>';
 		}
 
 	}
@@ -73,19 +73,9 @@ async function main() {
 	} else {
 		data.conclusion = 'success';
 	}
-
-	const testTable = `<table>
-	<tr>
-	  <td><img width="500" height="1" /><p>One</p></td>
-	  <td><img width="100" height="1" /><p>Two</p></td>
-	</tr>
-	<tr>
-	  <td colspan="2">Three</td>
-	</tr>
-  </table>`
 	data.output = {
 		title: 'Code Quality Report',
-		summary: summaryText + '\n\n' + reportContent + '\n\n' + testTable,
+		summary: summaryText + '\n\n' + reportContent,
 		annotations: annotations
 	}
 	return await github.annotate(data);
