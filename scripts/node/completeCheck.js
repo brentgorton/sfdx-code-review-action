@@ -25,7 +25,6 @@ async function main() {
 		summaryContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
 			summaryContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity - 1} | ${violation.line}\n`;
-			// summaryContent += `* ${violation.ruleName}: ${violation.message.trim()}\n`;
 
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
@@ -39,9 +38,7 @@ async function main() {
 				a.start_column = parseInt(violation.column);
 				a.end_column = parseInt(violation.endColumn);
 			}
-			if (violation.severity <= 4) {
-				actionRequired = true;
-			}
+
 			annotations.push(a);
 			if(!summary[violation.ruleName]) {
 				summary[violation.ruleName] = {
@@ -67,9 +64,16 @@ async function main() {
 
 	}
 
-	if(actionRequired) {
+	if(severities[0].size > 0){
+		data.conclusion = 'failure';
+	} else if (severities[1].size > 0 || severities[2].size > 0) {
 		data.conclusion = 'action_required';
+	} else if (severities[3].size > 0) {
+		data.conclusion = 'neutral';
+	} else {
+		data.conclusion = 'success';
 	}
+
 	data.output = {
 		title: 'Salesforce Code Quality',
 		summary: summaryText + '\n\n' + summaryContent,
