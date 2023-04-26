@@ -72,9 +72,18 @@ async function main() {
 		data.conclusion = 'success';
 	}
 
+	const testTable = `<table>
+	<tr>
+	  <td>One</td>
+	  <td>Two</td>
+	</tr>
+	<tr>
+	  <td colspan="2">Three</td>
+	</tr>
+  </table>`
 	data.output = {
 		title: 'Code Quality Report',
-		summary: summaryText + '\n\n' + reportContent,
+		summary: summaryText + '\n\n' + reportContent + '\n\n' + testTable,
 		annotations: annotations
 	}
 	return await github.annotate(data);
