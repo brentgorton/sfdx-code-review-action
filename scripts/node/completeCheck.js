@@ -52,7 +52,7 @@ async function main() {
 		if(severities[i].size > 0) {
 			summaryText += `### ${severityHeaders[i]}\n`;
 			for(const ruleName of severities[i].values()) {
-				summaryText += `* ${ruleName.ruleName}: ${ruleName.count}\n`;
+				summaryText += `* ${summary[ruleName].ruleName}: ${summary[ruleName].count}\n`;
 			}
 		}
 
