@@ -43,5 +43,6 @@ async function main() {
 		summary: 'Complete',
 		annotations: annotations
 	}
+	console.log(annotations);
 	return await github.annotate(data);
 }
