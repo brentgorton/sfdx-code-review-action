@@ -21,9 +21,9 @@ async function main() {
 	let summaryContent = '## Files\n';
 	results.forEach( (file) => {
 		summaryContent += `### ${file.fileName}\n`;
+		summaryContent += 'Violation | Rule | Severity | Line\n';
+		summaryContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
-			summaryContent += 'Violation | Rule | Severity | Line\n';
-			summaryContent += '--- | --- | --- | ---\n';
 			summaryContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity - 1} | ${violation.line}\n`;
 			// summaryContent += `* ${violation.ruleName}: ${violation.message.trim()}\n`;
 
