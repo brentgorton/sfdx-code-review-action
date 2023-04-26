@@ -23,7 +23,7 @@ async function main() {
 		reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>\n';
 		// reportContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
-			reportContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity} | ${violation.line}\n`;
+			reportContent += `<tr><td>${violation.message.trim()}</td><td>${violation.ruleName}</td><td>${violation.severity}</td><td>${violation.line}</td>\n`;
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
 				annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
