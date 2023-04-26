@@ -21,9 +21,9 @@ async function main() {
 	results.forEach( (file) => {
 		reportContent += `### ${file.fileName}\n`;
 		reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>\n';
-		// reportContent += '--- | --- | --- | ---\n';
+		reportContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
-			reportContent += `<tr><td>${violation.message.trim()}</td><td>${violation.ruleName}</td><td>${violation.severity}</td><td>${violation.line}</td></tr>\n`;
+			reportContent += `${violation.message.trim()} | ${violation.ruleName} | ${violation.severity} | ${violation.line}\n`;
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
 				annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
@@ -48,17 +48,18 @@ async function main() {
 			summary[violation.ruleName].count++;
 			severities[violation.severity - 1].add(violation.ruleName);
 		});
+		reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="200" height="1" /></td><td><img width="100" height="1" /></td><td><img width="100" height="1" /></td></tr></table>\n';
 	});
-	reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="200" height="1" /></td><td><img width="100" height="1" /></td><td><img width="100" height="1" /></td></tr></table>\n';
 	let summaryText = '';
 	for(let i = 0; i < severities.length; i++) {
 		if(severities[i].size > 0) {
 			summaryText += `### ${severityHeaders[i]}\n`;
-			summaryText += 'Rule Name | Count\n';
-			summaryText += '--- | ---\n';
+			summaryText += '<table><tr><th>Rule Name</th><th>Count</th></tr>\n';
+			//summaryText += '--- | ---\n';
 			for(const ruleName of [...severities[i]].sort()) {
-				summaryText += `${summary[ruleName].ruleName} | ${summary[ruleName].count}\n`;
+				summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${summary[ruleName].count}</td></tr>\n`;
 			}
+			summaryText += '<tr><td><img width="900" height="1" /></td><td><img width="100" height="1" /></td></tr</table>\n';
 		}
 
 	}
