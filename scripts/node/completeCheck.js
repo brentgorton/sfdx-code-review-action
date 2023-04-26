@@ -7,8 +7,8 @@ async function main() {
 	const pullRequest = githubAction.context.payload.pull_request;
 	const check = require('./check.js');
 	let data = check.getExisting(pullRequest, checkId);
-	data.status = 'completed';
-	data.conclusion = 'success';
+	/*data.status = 'completed';
+	data.conclusion = 'success';*/
 	const github = require('./github.js');
 
 	const fs = require('fs');
