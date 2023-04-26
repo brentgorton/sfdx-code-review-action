@@ -51,19 +51,17 @@ async function main() {
 		reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="350" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>';
 	});
 	let summaryText = '';
+	summaryText += '<table><tr><th>Rule Name</th><th>Severity</th><th>Count</th></tr>';
 	for(let i = 0; i < severities.length; i++) {
 		if(severities[i].size > 0) {
-			summaryText += `<h3>${severityHeaders[i]}</h3><br />`;
-			summaryText += '<table><tr><th>Rule Name</th><th>Count</th></tr>';
 			//summaryText += '--- | ---\n';
 			for(const ruleName of [...severities[i]].sort()) {
-				summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${summary[ruleName].count}</td></tr>`;
+				summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${i + 1}</td><td>${summary[ruleName].count}</td></tr>`;
 			}
-			summaryText += '<tr><td><img width="1000" height="1" /></td><td><img width="150" height="1" /></td></tr></table>';
+			summaryText += '<tr><td><img width="1000" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr>';
 		}
-
 	}
-
+	summaryText += '</table>'
 	if(severities[0].size > 0){
 		data.conclusion = 'failure';
 	} else if (severities[1].size > 0) {
