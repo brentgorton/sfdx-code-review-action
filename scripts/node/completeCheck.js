@@ -23,7 +23,7 @@ async function main() {
 		reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>\n';
 		// reportContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
-			reportContent += `<tr><td>${violation.message.trim()}</td><td>${violation.ruleName}</td><td>${violation.severity}</td><td>${violation.line}</td>\n`;
+			reportContent += `<tr><td>${violation.message.trim()}</td><td>${violation.ruleName}</td><td>${violation.severity}</td><td>${violation.line}</td></tr>\n`;
 			let a = {
 				path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
 				annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
@@ -59,7 +59,7 @@ async function main() {
 			for(const ruleName of [...severities[i]].sort()) {
 				summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${summary[ruleName].count}</td></tr>\n`;
 			}
-			summaryText += '<tr><td><img width="900" height="1" /></td><td><img width="100" height="1" /></td></tr</table>\n';
+			summaryText += '<tr><td><img width="900" height="1" /></td><td><img width="100" height="1" /></td></tr></table>\n';
 		}
 
 	}
