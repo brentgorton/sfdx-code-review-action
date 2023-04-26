@@ -31,14 +31,15 @@ async function main() {
 				annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
 				start_line: parseInt(violation.line),
 				end_line: parseInt(violation.endLine),
-				message: `${violation.url}`,
 				title: `${violation.ruleName}: ${violation.message.trim()}`
 			};
 			if(violation.line === violation.endLine) {
 				a.start_column = parseInt(violation.column);
 				a.end_column = parseInt(violation.endColumn);
 			}
-
+			if(violation.severity <= 2) {
+				a.message = `${violation.url}`;
+			}
 			annotations.push(a);
 			if(!summary[violation.ruleName]) {
 				summary[violation.ruleName] = {
