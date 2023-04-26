@@ -17,16 +17,18 @@ async function main() {
 	let actionRequired = false;
 	results.forEach( (file) => {
 		file.violations.forEach( (violation) => {
-			annotations.push({
+			let a = {
 				path: file.fileName,
 				annotation_level: (violation.severity <= 2 ? 'failure' : (violation.severity > 3 ? 'notice' : 'warning')),
 				start_line: parseInt(violation.line),
-				start_column: violation.line !== violation.endLine ? null : parseInt(violation.column),
 				end_line: parseInt(violation.endLine),
-				end_column: violation.line !== violation.endLine ? null : parseInt(violation.endColumn),
 				message: `${violation.message.trim()}\n${violation.url}`,
 				title: violation.ruleName
-			});
+			};
+			if(violation.line === violation.endLine) {
+				a.start_column = parseInt(violation.column);
+				a.end_column = parseInt(violation.endColumn);
+			}
 			if (violation.severity <= 4) {
 				actionRequired = true;
 			}
