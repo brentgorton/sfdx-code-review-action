@@ -64,11 +64,13 @@ async function main() {
 
 	}
 
+	console.log(severities);
+
 	if(severities[0].size > 0){
 		data.conclusion = 'failure';
-	} else if (severities[1].size > 0 || severities[2].size > 0) {
+	} else if (severities[1].size > 0) {
 		data.conclusion = 'action_required';
-	} else if (severities[3].size > 0) {
+	} else if (severities[2].size > 0 || severities[3].size > 0) {
 		data.conclusion = 'neutral';
 	} else {
 		data.conclusion = 'success';
