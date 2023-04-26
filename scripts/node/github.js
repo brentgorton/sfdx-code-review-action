@@ -77,9 +77,6 @@ module.exports = {
 	},
 
 	createCheck: async function (check) {
-		const githubAction = require('@actions/github');
-		const pullRequest = githubAction.context.payload.pull_request;
-	
 		const octokit = new Octokit();
 		const { 
 			data: { id }
