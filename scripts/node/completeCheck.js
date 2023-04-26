@@ -8,6 +8,7 @@ async function main() {
 	const check = require('./check.js');
 	let data = check.getExisting(pullRequest, checkId);
 	data.status = 'completed';
+	data.conclusion = 'success';
 	const github = require('./github.js');
 
 	const fs = require('fs');
@@ -18,10 +19,10 @@ async function main() {
 			annotations.push({
 				path: file.fileName,
 				annotation_level: (violation.severity <= 2 ? 'failure' : (violation.severity > 3 ? 'notice' : 'warning')),
-				start_line: violation.line,
-				start_column: violation.column,
-				end_line: violation.endLine,
-				end_column: violation.endColumn,
+				start_line: parseInt(violation.line),
+				start_column: parseInt(violation.column),
+				end_line: parseInt(violation.endLine),
+				end_column: parseInt(violation.endColumn),
 				message: `${violation.message.trim()}\n${violation.url}`,
 				title: violation.ruleName
 			});
