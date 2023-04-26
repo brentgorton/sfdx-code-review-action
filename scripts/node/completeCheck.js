@@ -18,9 +18,10 @@ async function main() {
 	let severities = [new Set(),new Set(),new Set(),new Set(),new Set()];
 	const severityHeaders = ['Critical', 'Error', 'Warning', 'Info', 'Hint'];
 	let reportContent = '<h2>Files</h2><br />';
+	reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>';
 	results.forEach( (file) => {
-		reportContent += `<h3>${file.fileName}</h3><br />`;
-		reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>';
+		reportContent += `<tr><td colspan="4"><h4>${file.fileName}</h4></td></tr>`;
+		
 		// reportContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
 			reportContent += `<tr><td>${violation.message.trim()}</td><td>${violation.ruleName}</td><td>${violation.severity}</td><td>${violation.line}</td></tr>`;
@@ -48,8 +49,9 @@ async function main() {
 			summary[violation.ruleName].count++;
 			severities[violation.severity - 1].add(violation.ruleName);
 		});
-		reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="350" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>';
+		
 	});
+	reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="350" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>';
 	let summaryText = '';
 	summaryText += '<table><tr><th>Rule Name</th><th>Severity</th><th>Count</th></tr>';
 	for(let i = 0; i < severities.length; i++) {
