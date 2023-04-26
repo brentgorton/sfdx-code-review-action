@@ -51,7 +51,7 @@ async function main() {
 	for(let i = 0; i < severities.length; i++) {
 		if(severities[i].size > 0) {
 			summaryText += `### ${severityHeaders[i]}\n`;
-			for(const ruleName of severities[i].values()) {
+			for(const ruleName of [...severities[i]].sort()) {
 				summaryText += `* ${summary[ruleName].ruleName}: ${summary[ruleName].count}\n`;
 			}
 		}
