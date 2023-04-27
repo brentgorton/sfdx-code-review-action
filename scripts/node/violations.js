@@ -43,9 +43,9 @@ class Violations {
         reportContent += '</table>';
         let summaryText = '';
         summaryText += '<table><tr><th>Rule Name</th><th>Severity</th><th>Count</th></tr>';
-        for(let i = 0; i < severities.length; i++) {
-            if(severities[i].size > 0) {
-                for(const ruleName of [...severities[i]].sort()) {
+        for(let i = 0; i < this.severities.length; i++) {
+            if(this.severities[i].size > 0) {
+                for(const ruleName of [...this.severities[i]].sort()) {
                     summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${i + 1}</td><td>${summary[ruleName].count}</td></tr>`;
                 }
             }
