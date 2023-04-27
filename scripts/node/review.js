@@ -52,13 +52,13 @@ const publicMethods = {
 	},
 	async createReview(filename) {
 		const ViolationsService = require('./violations.js');
-		const violations = ViolationsService.get(filename, minSeverityToConsider);
+		const issues = ViolationsService.get(filename, minSeverityToConsider).comments;
 		const comments = require('./comments.js');
 
 		const githubAction = require('@actions/github');
 		const pullRequest = githubAction.context.payload.pull_request;
 		const review = require('./review.js');
-		const prReview = publicMethods.evaluate(violations.comments, approveThreshold, rejectThreshold);
+		const prReview = publicMethods.evaluate(issues, approveThreshold, rejectThreshold);
 
 		prReview.repo = pullRequest.base.repo.name;
 		prReview.owner = pullRequest.base.repo.owner.login;
@@ -78,7 +78,7 @@ const publicMethods = {
 				allExistingComments = new Map([...existingComments, ...allExistingComments]);
 			}
 		} 
-		let filteredIssues = comments.filter(violations.comments, allExistingComments);
+		let filteredIssues = comments.filter(issues, allExistingComments);
 		console.log(
 			`current issues: ${issues.length}, already posted: ${allExistingComments.size}, new ${filteredIssues.length}`
 		);
