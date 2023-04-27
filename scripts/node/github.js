@@ -3,7 +3,7 @@ const { Octokit } = require('@octokit/action');
 module.exports = {
 	createReview: async function (review) {
 		const octokit = new Octokit();
-
+		console.log('creating review');
 		const {
 			data: { id }
 		} = await octokit.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
@@ -12,7 +12,10 @@ module.exports = {
 			pull_number: review.pullNumber,
 			body: review.body,
 			comments: review.comments,
-			event: review.event
+			event: review.event,
+			headers: {
+				'X-GitHub-Api-Version': '2022-11-28'
+			}
 		});
 		return id;
 	},
