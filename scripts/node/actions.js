@@ -9,10 +9,11 @@ async function main() {
 	switch(process.argv[2].toLowerCase()) {
 		case 'check':
 			return check();
+		case 'review':
+			return review();
 		default:
 			_error();
 	}
-
 }
 
 async function check() {
@@ -26,9 +27,21 @@ async function check() {
 	}
 }
 
+async function review() {
+	/*
+	if(process.argv.length === 5 && process.argv[3].toLowerCase() === 'upload'){
+		const review = require('./review.js');
+		return review.createReview(process.argv[4]);
+	} else {
+		_error();
+	}
+	*/
+}
+
 function _error(){
 	console.error('Invalid command');
-	console.error('Usage: node createCheck.js check init');
-	console.error('Usage: node createCheck.js check upload <report.json>');
+	console.error('Usage: node actions.js check init');
+	console.error('Usage: node actions.js check upload <report.json>');
+	console.error('Usage: node actions.js review upload <report.json>');
 	process.exit(1);
 }

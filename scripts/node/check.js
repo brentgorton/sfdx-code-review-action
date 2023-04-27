@@ -17,6 +17,7 @@ module.exports = {
         data.conclusion = 'success';
         const github = require('./github.js');
 
+        /*
         const fs = require('fs');
         const results = JSON.parse(fs.readFileSync(filename, 'utf-8'));
         let annotations = [];
@@ -75,10 +76,14 @@ module.exports = {
         } else {
             data.conclusion = 'success';
         }
+        */
+        const violations = require('./violations.js');
+        const results = violations.get(filename, 5);
+        data.conclusion = results.conclusion;
         data.output = {
             title: 'Code Quality Report',
-            summary: summaryText + '\n\n' + reportContent,
-            annotations: annotations
+            summary: results.markdown,
+            annotations: results.annotations
         }
         return await github.annotate(data);
     }
