@@ -2,6 +2,7 @@
 main();
 
 async function main() {
+	console.log(process.argv);
 	if(process.argv.length === 3 && process.argv[2].toLowerCase() === 'init'){
 		return init();
 	} else if(process.argv.length === 4 && process.argv[2].toLowerCase() === 'upload') {
