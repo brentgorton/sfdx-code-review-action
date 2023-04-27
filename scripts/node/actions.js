@@ -2,11 +2,24 @@
 main();
 
 async function main() {
-	console.log(process.argv);
-	if(process.argv.length === 3 && process.argv[2].toLowerCase() === 'init'){
+	if(process.argv.length < 4) {
+		_error();
+	}
+
+	switch(process.argv[2].toLowerCase()) {
+		case 'check':
+			return check();
+		default:
+			_error();
+	}
+
+}
+
+async function check() {
+	if(process.argv.length === 4 && process.argv[3].toLowerCase() === 'init'){
 		return init();
-	} else if(process.argv.length === 4 && process.argv[2].toLowerCase() === 'upload') {
-		return uploadReport();
+	} else if(process.argv.length === 5 && process.argv[3].toLowerCase() === 'upload') {
+		return uploadReport(process.argv[4]);
 	} else {
 		_error();
 	}
@@ -14,8 +27,8 @@ async function main() {
 
 function _error(){
 	console.error('Invalid command');
-	console.error('Usage: node createCheck.js init');
-	console.error('Usage: node createCheck.js upload <report.json>');
+	console.error('Usage: node createCheck.js check init');
+	console.error('Usage: node createCheck.js check upload <report.json>');
 	process.exit(1);
 }
 
@@ -31,7 +44,7 @@ async function init() {
 	core.exportVariable('CHECK_ID', checkId);
 }
 
-async function uploadReport() {
+async function uploadReport(filename) {
 	const checkId = process.env.CHECK_ID;
 	const githubAction = require('@actions/github');
 	const pullRequest = githubAction.context.payload.pull_request;
@@ -42,7 +55,7 @@ async function uploadReport() {
 	const github = require('./github.js');
 
 	const fs = require('fs');
-	const results = JSON.parse(fs.readFileSync(process.argv[3], 'utf-8'));
+	const results = JSON.parse(fs.readFileSync(filename, 'utf-8'));
 	let annotations = [];
 	let summary = {};
 	let severities = [new Set(),new Set(),new Set(),new Set(),new Set()];
