@@ -14,53 +14,33 @@ class Violations {
     annotations = [];
     markdown = '';
     conclusion = '';
+    summary = {};
+    severities = [new Set(),new Set(),new Set(),new Set(),new Set()];
     constructor(filename, severityThreshold = 5) {
         this.filename = filename;
         this.severityThreshold = severityThreshold;
-        this._init();
+        this.init();
     }
 
-    _init() {
-        let summary = {};
-        let severities = [new Set(),new Set(),new Set(),new Set(),new Set()];
+    init() {
         this.files = JSON.parse(fs.readFileSync(this.filename, 'utf-8'));
         let reportContent = '<h2>Files</h2><br />';
-        reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>';
+        reportContent += '<table>';
+        reportContent += this.addRow(['Violation', 'Rule', 'Severity', 'Line'], true);
         this.files.forEach( (file) => {
-            reportContent += `<tr><th colspan="4">${file.fileName}</th></tr>`;
+            reportContent += this.addRow([file.fileName], true, 4);
             file.violations.forEach( (violation) => {
-                reportContent += `<tr><td>${violation.message.trim()}</td><td>${violation.ruleName}</td><td>${violation.severity}</td><td>${violation.line}</td></tr>`;
+                reportContent += this.addRow([violation.message.trim(), violation.ruleName, violation.severity, violation.line]);
                 if(violation.severity <= this.severityThreshold) {
-                    /*
-                    let a = {
-                        path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
-                        annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
-                        start_line: parseInt(violation.line),
-                        end_line: parseInt(violation.endLine),
-                        message : `${violation.message.trim()}\n${violation.url}`,
-                        title: `${violation.category} : ${violation.ruleName}`
-                    };
-                    if(violation.line === violation.endLine) {
-                        a.start_column = parseInt(violation.column);
-                        a.end_column = parseInt(violation.endColumn);
-                    }
-                    */
                     let a = new Annotation(file, violation)
                     this.annotations.push(a);
-                    if(!summary[violation.ruleName]) {
-                        summary[violation.ruleName] = {
-                            count: 0,
-                            severity: violation.severity,
-                            ruleName: violation.ruleName
-                        };
-                    }
-                    summary[violation.ruleName].count++;
-                    severities[violation.severity - 1].add(violation.ruleName);
+                    this.summarize(violation);
                 }
             });
             
         });
-        reportContent += '<tr><td><img width="600" height="1" /></td><td><img width="375" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>';
+        reportContent += this.setColumnWidths([600, 375, 75, 75]);
+        reportContent += '</table>';
         let summaryText = '';
         summaryText += '<table><tr><th>Rule Name</th><th>Severity</th><th>Count</th></tr>';
         for(let i = 0; i < severities.length; i++) {
@@ -70,17 +50,56 @@ class Violations {
                 }
             }
         }
-        summaryText += '<tr><td><img width="1000" height="1" /></td><td><img width="75" height="1" /></td><td><img width="75" height="1" /></td></tr></table>'
-        if(severities[0].size > 0){
+        summaryText += this.setColumnWidths*([1000, 75, 75]);
+        summaryText += '</table>';
+        this.updateSeverity();
+        this.markdown = summaryText + '\n\n' + reportContent;
+    }
+
+    setColumnWidths(cols){
+        let response = '<tr>';
+        for(let i = 0; i < cols.length; i++) {
+            response += `<td><img width="${cols[i]}" height="1" /></td>`;
+        }
+        response += '</tr>';
+        return response;
+    }
+
+    addRow(cols, th=false, colspan=1) {
+        let response = '<tr>';
+        for(let i = 0; i < cols.length; i++) {
+            if(th){
+                response += `<th colspan="${colspan}">${cols[i]}</th>`;
+            } else {
+                response += `<td colspan="${colspan}">${cols[i]}</td>`;
+            }
+        }
+        response += '</tr>';
+        return response;
+    }
+
+    summarize(violation) {
+        if(!this.summary[violation.ruleName]) {
+            this.summary[violation.ruleName] = {
+                count: 0,
+                severity: violation.severity,
+                ruleName: violation.ruleName
+            };
+        }
+        this.summary[violation.ruleName].count++;
+        this.severities[violation.severity - 1].add(violation.ruleName);
+    }
+
+    updateSeverity() {
+        if(this.severities[0].size > 0){
             this.conclusion = 'failure';
-        } else if (severities[1].size > 0) {
+        } else if (this.severities[1].size > 0) {
             this.conclusion = 'action_required';
-        } else if (severities[2].size > 0 || severities[3].size > 0) {
+        } else if (this.severities[2].size > 0 || this.severities[3].size > 0) {
             this.conclusion = 'neutral';
         } else {
             this.conclusion = 'success';
         }
-        this.markdown = summaryText + '\n\n' + reportContent;
     }
 }
 
@@ -108,4 +127,8 @@ class Annotation {
         }
 
     }
+}
+
+class Rule {
+    constructor()
 }
