@@ -63,9 +63,9 @@ const publicMethods = {
 		prReview.owner = pullRequest.base.repo.owner.login;
 		prReview.pullNumber = pullRequest.number;
 		prReview.commit_id = pullRequest.head.sha;
-		/*for(let issue of issues) {
-			issue.commitId = prReview.commitId;
-		}*/
+		for(let issue of issues) {
+			issue.commitId = pullRequest.head.sha;
+		}
 
 		const github = require('./github.js');
 		const allReviews = await github.getReviews(prReview);
