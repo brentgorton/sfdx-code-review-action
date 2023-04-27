@@ -4,7 +4,13 @@ module.exports = {
 	createReview: async function (review) {
 		const octokit = new Octokit();
 		console.log('creating review');
-		console.log(review);
+		let tmpComments = [];
+		for(const comment of review.comments) {
+			let tmpComment = { ...comment };
+			delete tmpComment.commit_id;
+			tmpComments.push(tmpComment);
+		}
+
 		const {
 			data: { id }
 		} = await octokit.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
@@ -12,7 +18,7 @@ module.exports = {
 			repo: review.repo,
 			pull_number: review.pullNumber,
 			body: review.body,
-			comments: review.comments,
+			comments: tmpComments,
 			event: review.event,
 			headers: {
 				'X-GitHub-Api-Version': '2022-11-28'
