@@ -58,7 +58,7 @@ const publicMethods = {
 		const githubAction = require('@actions/github');
 		const pullRequest = githubAction.context.payload.pull_request;
 		const review = require('./review.js');
-		const prReview = publicMethods.evaluate(violations.annotations, approveThreshold, rejectThreshold);
+		const prReview = publicMethods.evaluate(violations.comments, approveThreshold, rejectThreshold);
 
 		prReview.repo = pullRequest.base.repo.name;
 		prReview.owner = pullRequest.base.repo.owner.login;
@@ -78,7 +78,7 @@ const publicMethods = {
 				allExistingComments = new Map([...existingComments, ...allExistingComments]);
 			}
 		} 
-		let filteredIssues = comments.filter(violations.annotations, allExistingComments);
+		let filteredIssues = comments.filter(violations.comments, allExistingComments);
 		console.log(
 			`current issues: ${issues.length}, already posted: ${allExistingComments.size}, new ${filteredIssues.length}`
 		);

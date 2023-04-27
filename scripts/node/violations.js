@@ -12,6 +12,7 @@ class Violations {
     files = [];
     severityThreshold = 5;
     annotations = [];
+    comments = [];
     markdown = '';
     conclusion = '';
     summary = {};
@@ -34,10 +35,10 @@ class Violations {
                 if(violation.severity <= this.severityThreshold) {
                     let a = new Annotation(file, violation)
                     this.annotations.push(a);
+                    this.comments.push(new Comment(file, violation));
                     this.summarize(violation);
                 }
-            });
-            
+            }); 
         });
 
         let summaryReport = new Table([1000, 75, 75]);
@@ -123,6 +124,28 @@ class Annotation {
             this.end_column = parseInt(violation.endColumn);
         }
 
+    }
+}
+
+class Comment {
+    owner;
+    repo;
+    pull_number;
+    body;
+    commit_id;
+    path;
+    start_line;
+    start_side;
+    line;
+    side = 'RIGHT'
+
+    constructor(file, violation){
+        this.body = `${violation.message.trim()}\n${violation.url}`;
+        this.commit_id = process.env.GITHUB_SHA;
+        this.path = file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', '');
+        this.start_line = parseInt(violation.line);
+        this.start_side = 'RIGHT';
+        this.line = parseInt(violation.line);
     }
 }
 
