@@ -52,7 +52,7 @@ const publicMethods = {
 	},
 	async createReview(filename) {
 		const ViolationsService = require('./violations.js');
-		const issues = ViolationsService.get(filename, minSeverityToConsider).comments;
+		const issues = ViolationsService.get(filename, 5).comments;
 		const comments = require('./comments.js');
 
 		const githubAction = require('@actions/github');
