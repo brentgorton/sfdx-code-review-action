@@ -97,7 +97,7 @@ function _generate(pullRequest, output = { title: 'Salesforce', summary: '', tex
         }
     };
 }
-function getExisting(pullRequest, id) {
+function _getExisting(pullRequest, id) {
     return {
         check_run_id: id,
         owner: pullRequest.base.repo.owner.login,
