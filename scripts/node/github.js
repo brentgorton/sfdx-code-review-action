@@ -4,6 +4,7 @@ module.exports = {
 	createReview: async function (review) {
 		const octokit = new Octokit();
 		console.log('creating review');
+		console.log(review);
 		const {
 			data: { id }
 		} = await octokit.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
