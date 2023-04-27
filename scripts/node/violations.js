@@ -24,13 +24,13 @@ class Violations {
 
     init() {
         this.files = JSON.parse(fs.readFileSync(this.filename, 'utf-8'));
-        let reportContent = '<h2>Files</h2><br />';
-        reportContent += '<table>';
-        reportContent += this.addRow(['Violation', 'Rule', 'Severity', 'Line'], true);
+        let reportContent = '<br />';
+        let fileReport = new Table([600, 375, 75, 75]);
+        fileReport.addRow(['Violation', 'Rule', 'Severity', 'Line'], true);
         this.files.forEach( (file) => {
-            reportContent += this.addRow([file.fileName], true, 4);
+            fileReport.addRow([file.fileName], true, 4);
             file.violations.forEach( (violation) => {
-                reportContent += this.addRow([violation.message.trim(), violation.ruleName, violation.severity, violation.line]);
+                fileReport.addRow([violation.message.trim(), violation.ruleName, violation.severity, violation.line]);
                 if(violation.severity <= this.severityThreshold) {
                     let a = new Annotation(file, violation)
                     this.annotations.push(a);
@@ -39,21 +39,18 @@ class Violations {
             });
             
         });
-        reportContent += this.setColumnWidths([600, 375, 75, 75]);
-        reportContent += '</table>';
-        let summaryText = '';
-        summaryText += '<table><tr><th>Rule Name</th><th>Severity</th><th>Count</th></tr>';
+
+        let summaryReport = new Table([1000, 75, 75]);
+        summaryReport.addRow(['Rule Name', 'Severity', 'Count'], true);
         for(let i = 0; i < this.severities.length; i++) {
             if(this.severities[i].size > 0) {
                 for(const ruleName of [...this.severities[i]].sort()) {
-                    summaryText += `<tr><td>${this.summary[ruleName].ruleName}</td><td>${i + 1}</td><td>${this.summary[ruleName].count}</td></tr>`;
+                    summaryReport.addRow([ruleName, i + 1, this.summary[ruleName].count]);
                 }
             }
         }
-        summaryText += this.setColumnWidths*([1000, 75, 75]);
-        summaryText += '</table>';
         this.updateSeverity();
-        this.markdown = summaryText + '\n\n' + reportContent;
+        this.markdown += `${summaryReport.getHtml()}<h2>Files</h2>${fileReport.getHtml()}`;
     }
 
     setColumnWidths(cols){
@@ -126,5 +123,42 @@ class Annotation {
             this.end_column = parseInt(violation.endColumn);
         }
 
+    }
+}
+
+class Table {
+    _widths = [];
+    _content = [];
+    constructor(widths) {
+        this.widths = widths;
+    }
+
+    addRow(cols, th=false, colspan=1) {
+        this._content = '<tr>';
+        for(let i = 0; i < cols.length; i++) {
+            if(th){
+                this._content += `<th colspan="${colspan}">${cols[i]}</th>`;
+            } else {
+                this._content += `<td colspan="${colspan}">${cols[i]}</td>`;
+            }
+        }
+        this._content += '</tr>';
+    }
+
+    getHtml() {
+        return `<table>${this._content}${this._footer()}</table>`;
+    }
+
+    _footer() {
+        let response = '<tr>';
+        for(let i = 0; i < this.widths.length; i++) {
+            if(this.widths[i] > 0){
+                response += `<td><img width="${this.widths[i]}" height="1" /></td>`;
+            } else {
+                response += '<td></td>';
+            }
+        }
+        response += '</tr>';
+        return response;
     }
 }
