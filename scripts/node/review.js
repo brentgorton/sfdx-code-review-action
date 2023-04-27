@@ -78,7 +78,7 @@ const publicMethods = {
 				allExistingComments = new Map([...existingComments, ...allExistingComments]);
 			}
 		} 
-		let filteredIssues = comments.filter(issues, allExistingComments);
+		let filteredIssues = comments.filter(violations.annotations, allExistingComments);
 		console.log(
 			`current issues: ${issues.length}, already posted: ${allExistingComments.size}, new ${filteredIssues.length}`
 		);
