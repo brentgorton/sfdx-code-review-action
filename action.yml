@@ -124,9 +124,11 @@ runs:
         sfdx scanner:run --target "${{ steps.getdiff.outputs.difflist }}" --category "${{ inputs.category }}" --engine "${{ inputs.engine }}" --eslintconfig "${{ inputs.eslintconfig }}" --pmdconfig "${{ inputs.pmdconfig }}" --tsconfig "${{ inputs.tsconfig }}" --format json --normalize-severity  -o report.json
         if test -f "report.json"; then
           node ${{ github.action_path}}/scripts/node/actions.js check upload report.json
+          node ${{ github.action_path}}/scripts/node/actions.js review upload report.json
         else
           echo "[]" > report.json
           node ${{ github.action_path}}/scripts/node/actions.js check upload report.json
+          node ${{ github.action_path}}/scripts/node/actions.js review upload report.json
         fi
     # - name: 'Run Graph Engine'
     #   if: ${{ inputs.dfa_setting != '' }}

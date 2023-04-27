@@ -28,14 +28,12 @@ async function check() {
 }
 
 async function review() {
-	/*
 	if(process.argv.length === 5 && process.argv[3].toLowerCase() === 'upload'){
 		const review = require('./review.js');
 		return review.createReview(process.argv[4]);
 	} else {
 		_error();
 	}
-	*/
 }
 
 function _error(){
