@@ -21,8 +21,6 @@ async function main() {
 	reportContent += '<table><tr><th>Violation</th><th>Rule</th><th>Severity</th><th>Line</th></tr>';
 	results.forEach( (file) => {
 		reportContent += `<tr><th colspan="4">${file.fileName}</th></tr>`;
-		
-		// reportContent += '--- | --- | --- | ---\n';
 		file.violations.forEach( (violation) => {
 			reportContent += `<tr><td>${violation.message.trim()}</td><td>${violation.ruleName}</td><td>${violation.severity}</td><td>${violation.line}</td></tr>`;
 			let a = {
@@ -56,7 +54,6 @@ async function main() {
 	summaryText += '<table><tr><th>Rule Name</th><th>Severity</th><th>Count</th></tr>';
 	for(let i = 0; i < severities.length; i++) {
 		if(severities[i].size > 0) {
-			//summaryText += '--- | ---\n';
 			for(const ruleName of [...severities[i]].sort()) {
 				summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${i + 1}</td><td>${summary[ruleName].count}</td></tr>`;
 			}
