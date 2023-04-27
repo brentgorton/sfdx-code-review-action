@@ -54,7 +54,6 @@ const publicMethods = {
 		const ViolationsService = require('./violations.js');
 		const issues = ViolationsService.get(filename, 5).comments;
 		const comments = require('./comments.js');
-
 		const githubAction = require('@actions/github');
 		const pullRequest = githubAction.context.payload.pull_request;
 		const review = require('./review.js');
@@ -64,7 +63,10 @@ const publicMethods = {
 		prReview.owner = pullRequest.base.repo.owner.login;
 		prReview.pullNumber = pullRequest.number;
 		prReview.commitId = pullRequest.head.sha;
-
+		for(let issue of issues) {
+			issue.commitId = prReview.commitId;
+		}
+		
 		const github = require('./github.js');
 		const allReviews = await github.getReviews(prReview);
 		const previousReviews = review.findRelevantReviews(allReviews);
