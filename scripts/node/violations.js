@@ -128,7 +128,3 @@ class Annotation {
 
     }
 }
-
-class Rule {
-    constructor()
-}
