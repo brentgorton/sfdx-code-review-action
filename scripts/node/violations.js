@@ -145,7 +145,7 @@ class Comment {
         this.path = file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', '');
         this.start_line = parseInt(violation.line);
         this.start_side = 'RIGHT';
-        this.line = violation.endLine;
+        this.line = parseInt(violation.endLine);
     }
 }
 
