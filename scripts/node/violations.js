@@ -31,6 +31,7 @@ class Violations {
             file.violations.forEach( (violation) => {
                 reportContent += `<tr><td>${violation.message.trim()}</td><td>${violation.ruleName}</td><td>${violation.severity}</td><td>${violation.line}</td></tr>`;
                 if(violation.severity <= this.severityThreshold) {
+                    /*
                     let a = {
                         path: file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
                         annotation_level: (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
@@ -43,7 +44,8 @@ class Violations {
                         a.start_column = parseInt(violation.column);
                         a.end_column = parseInt(violation.endColumn);
                     }
-
+                    */
+                    let a = new Annotation(file, violation)
                     this.annotations.push(a);
                     if(!summary[violation.ruleName]) {
                         summary[violation.ruleName] = {
@@ -79,5 +81,31 @@ class Violations {
             this.conclusion = 'success';
         }
         this.markdown = summaryText + '\n\n' + reportContent;
+    }
+}
+
+class Annotation {
+    path;
+    annotation_level;
+    start_line;
+    end_line;
+    start_column;
+    end_column;
+    message;
+    title;
+    start_column;
+    end_column;
+    constructor(file, violation){
+        this.path = file.fileName.replace(process.env.GITHUB_WORKSPACE + '/', ''),
+        this.annotation_level = (violation.severity <= 1 ? 'failure' : (violation.severity > 2 ? 'notice' : 'warning')),
+        this.start_line = parseInt(violation.line),
+        this.end_line = parseInt(violation.endLine),
+        this.message  = `${violation.message.trim()}\n${violation.url}`,
+        this.title = `${violation.category} : ${violation.ruleName}`
+        if(violation.line === violation.endLine) {
+            this.start_column = parseInt(violation.column);
+            this.end_column = parseInt(violation.endColumn);
+        }
+
     }
 }
