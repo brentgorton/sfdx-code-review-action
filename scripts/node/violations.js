@@ -46,7 +46,7 @@ class Violations {
         for(let i = 0; i < this.severities.length; i++) {
             if(this.severities[i].size > 0) {
                 for(const ruleName of [...this.severities[i]].sort()) {
-                    summaryText += `<tr><td>${summary[ruleName].ruleName}</td><td>${i + 1}</td><td>${summary[ruleName].count}</td></tr>`;
+                    summaryText += `<tr><td>${this.summary[ruleName].ruleName}</td><td>${i + 1}</td><td>${this.summary[ruleName].count}</td></tr>`;
                 }
             }
         }
