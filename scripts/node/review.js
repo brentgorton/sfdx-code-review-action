@@ -93,8 +93,8 @@ const publicMethods = {
 		);
 		if (hasNewIssues || isIssueCountChanged || (hasNoCurrentIssues && isFirstReview)) {
 			let sortedComments = comments.sort(filteredIssues, absoluteMaxComments);
-			console.log(prReview.comments);
 			prReview.comments = sortedComments.slice(0, PR_MAX_SIZE);
+			console.log(prReview.comments);
 			sortedComments = sortedComments.slice(PR_MAX_SIZE);
 			const reviewId = await github.createReview(prReview);
 			prReview.id = reviewId;
