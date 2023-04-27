@@ -64,7 +64,7 @@ const publicMethods = {
 		prReview.pullNumber = pullRequest.number;
 		prReview.commit_id = pullRequest.head.sha;
 		for(let issue of issues) {
-			issue.commitId = pullRequest.head.sha;
+			issue.commit_id = pullRequest.head.sha;
 		}
 
 		const github = require('./github.js');
