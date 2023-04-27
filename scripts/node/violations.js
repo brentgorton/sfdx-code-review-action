@@ -134,7 +134,7 @@ class Table {
     }
 
     addRow(cols, th=false, colspan=1) {
-        this._content = '<tr>';
+        this._content += '<tr>';
         for(let i = 0; i < cols.length; i++) {
             if(th){
                 this._content += `<th colspan="${colspan}">${cols[i]}</th>`;
