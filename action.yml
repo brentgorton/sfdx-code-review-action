@@ -120,6 +120,10 @@ runs:
       shell: bash
       env:
           GITHUB_TOKEN: ${{ inputs.github_token }}
+          SEVERITY_THRESHOLD: ${{ inputs.severity_threshold }}
+          REJECT_THRESHOLD: ${{ inputs.reject_threshold }}
+          APPROVE_THRESHOLD: ${{ inputs.approve_threshold }} 
+          MAX_COMMENTS: ${{ inputs.max_comments }}
       run: |
         sfdx scanner:run --target "${{ steps.getdiff.outputs.difflist }}" --category "${{ inputs.category }}" --engine "${{ inputs.engine }}" --eslintconfig "${{ inputs.eslintconfig }}" --pmdconfig "${{ inputs.pmdconfig }}" --tsconfig "${{ inputs.tsconfig }}" --format json --normalize-severity  -o report.json
         if test -f "report.json"; then
